@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="/build/css/main.css" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="cardcom__container">
+            <div class="content__container">
+                <div class="content__title"></div>
+                <div class="content__price"></div>
+                <div class="content__data">
+                    <img
+                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=835ad7c3-f5d4-4340-a324-c85ee291a735'}"
+                        src="assets/robot.png"
+                        alt=""
+                        class="content__robot_img"
+                        draggable="false"
+                    />
+                    <img
+                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=cae62bd6-2e10-4e50-9238-968213e08769'}"
+                        src="assets/circles.png"
+                        alt=""
+                        class="content__circle_img"
+                        draggable="false"
+                    />
+                    <div class="content__data_left">
+                        <div class="card__inner">
+                            <div class="front__side">
+                                <div class="clip__path"></div>
+                                <img
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=24aafb93-7d63-4e13-b618-1292e3c7430e'}"
+                                    src="assets/card_map.png"
+                                    alt=""
+                                    class="map__img"
+                                    draggable="false"
+                                />
+                                <div class="front__side_topsection">
+                                    <img
+                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=f0da09ba-7c5b-4b9a-bf03-72bed9532085'}"
+                                        src="assets/chip.png"
+                                        alt=""
+                                        class="chip__img"
+                                        draggable="false"
+                                    />
+                                    <img
+                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=d1ae48db-082f-4ff2-8412-52bb9b133ec4'}"
+                                        src="assets/visa.png"
+                                        alt=""
+                                        class="type__img"
+                                        draggable="false"
+                                    />
+                                </div>
+                                <div class="front__side_middlesection">
+                                    <span class="c_item c_first">----</span>
+                                    <span class="c_item c_second">----</span>
+                                    <span class="c_item c_third">----</span>
+                                    <span class="c_item c_fourth">----</span>
+                                </div>
+                                <div class="front__side_bottomsection">
+                                    <div class="card__holder">
+                                        <div class="holder"></div>
+                                        <div class="holder__name"></div>
+                                    </div>
+                                    <div class="card__date">
+                                        <div class="valid__date"></div>
+                                        <div class="valid__date_value">
+                                            <span class="d_item d_first">--</span>
+                                            <span class="d_item">/</span>
+                                            <span class="d_item d_second">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="back__side">
+                                <div class="clip__path"></div>
+                                <img
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=24aafb93-7d63-4e13-b618-1292e3c7430e'}"
+                                    src="assets/card_map.png"
+                                    alt="front"
+                                    class="map__img"
+                                    draggable="false"
+                                />
+                                <div class="bar"></div>
+                                <div class="card__cvv">
+                                    <span class="cvv_item">---</span>
+                                </div>
+                                <div class="card__text"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content__data_right">
+                        <div class="form-group number">
+                            <label class="label__number" for="txtCardNumber"></label>
+                            <input type="tel" id="txtCardNumber" placeholder="4111 1111 1111 1111" maxlength="19" />
+                            <span class="span_err number__err"></span>
+                            <div class="card__logo">
+                                <img
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=2d6e1cf5-1034-4c51-851e-54765e34f435'}"
+                                    src="assets/no_name_card.png"
+                                    alt=""
+                                    class="input__img_card"
+                                    draggable="false"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group cvv">
+                            <label class="label__cvv" for="txtCvv"></label>
+                            <input type="text" id="txtCvv" placeholder="123" maxlength="3" />
+                            <span class="span_err cvv__err"></span>
+                        </div>
+                        <div class="form-group date">
+                            <label class="label__date" for="exp-date"></label>
+                            <input type="text" id="exp-date" placeholder="MM/YY" maxlength="5" />
+                            <span class="span_err date__err"></span>
+                        </div>
+                        <div class="form-group identity">
+                            <label class="label__identity" for="txtCardOwnerID"></label>
+                            <input type="text" id="txtCardOwnerID" maxlength="9" />
+                            <div class="card__logo">
+                                <img
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=87a034e8-4e35-4093-9fd8-996449337ee9'}"
+                                    src="assets/id_logo.png"
+                                    alt=""
+                                    class="identity__logo"
+                                    draggable="false"
+                                />
+                            </div>
+                            <span class="span_err identity__err"></span>
+                        </div>
+                        <div class="form-group terms"></div>
+                    </div>
+                </div>
+                <div class="submit__button"></div>
+            </div>
+            <div class="outer__links_wrapper">
+                <div class="outer__mediwho">
+                    <span class="outer__text"></span>
+                    <a class="outer__link" target="_blank" href="https://drive.google.com/file/d/1FKXlXJRLbZWW_UfUwji6zQ0eSPYvnTFc/preview" rel="noopener noreferrer"> </a>
+                </div>
+                <div class="outer__cardcom">
+                    <div class="cardcomText"><span data-bind="html: labels.PoweredByCardCom"></span></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

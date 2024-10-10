@@ -1,62 +1,54 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = (env, argv) =>{
+module.exports = env => {
     return {
-        mode: env.mode || "development",
+        mode: env.mode || 'development',
         entry: path.resolve(__dirname, './src/index.js'),
         output: {
             path: path.resolve(__dirname, './build'),
-            filename: '[name][contenthash].js',
-            clean: true,
+            filename: '[name].js',
+            assetModuleFilename: 'images/[hash][ext][query]',
+            clean: true
         },
         plugins: [
-            new HtmlWebpackPlugin(
-                { template: path.resolve(__dirname, './public/index.html') }
-            ),
+            new HtmlWebpackPlugin({ template: path.resolve(__dirname, './src/index.html') }),
             new webpack.ProgressPlugin(),
             new MiniCssExtractPlugin({
-                // filename: 'css/[name].[contenthash:8].css',
-                // chunkFilename: 'css/[name].[contenthash:8].css',
                 filename: 'css/[name].css',
-                chunkFilename: 'css/[name].css',
+                chunkFilename: 'css/[name].css'
             })
         ],
         module: {
             rules: [
                 {
                     test: /\.s[ac]ss$/i,
-                    use: [
-                        // Creates `style` nodes from JS strings
-                        MiniCssExtractPlugin.loader,
-                        // Translates CSS into CommonJS
-                        "css-loader",
-                        // Compiles Sass to CSS
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                sassOptions: {
-                                    includePaths: [path.resolve(__dirname, 'src/styles/styles.scss')],
-                                },
-                            },
-                        }
-                    ],
+                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
                 },
                 {
-                    test: /\.m?jsx$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: "babel-loader",
-                        options: {
-                            presets: [
-                                '@babel/preset-env',
-                                '@babel/preset-react'
+                    test: /\.(png|jpg|jpeg|gif|svg)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'images/[hash][ext][query]'
+                    }
+                },
+                {
+                    test: /\.html$/i,
+                    loader: 'html-loader',
+                    options: {
+                        sources: {
+                            list: [
+                                {
+                                    tag: 'img',
+                                    attribute: 'src',
+                                    type: 'src'
+                                }
                             ]
                         }
                     }
-                },
+                }
             ]
         },
         resolve: {
@@ -65,8 +57,7 @@ module.exports = (env, argv) =>{
         devtool: 'inline-source-map',
         devServer: {
             port: 5050,
-            open: true,
+            open: true
         }
-
     }
 }
