@@ -1,0 +1,29 @@
+{
+  "name": "card-com-mediwho",
+  "version": "1.0.0",
+  "description": "A brief description of your project",
+  "main": "index.js",
+  "scripts": {
+    "build:dev": "webpack --env mode=development",
+    "build:prod": "webpack --env mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniStep15/card-com-mediwho.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaniStep15/card-com-mediwho/issues"
+  },
+  "homepage": "https://github.com/DaniStep15/card-com-mediwho#readme",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "webpack": "^5.95.0"
+  }
+}
