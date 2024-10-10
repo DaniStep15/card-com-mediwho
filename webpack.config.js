@@ -12,9 +12,22 @@ module.exports = (env, argv) =>{
             clean: true,
         },
         plugins: [
-            new HtmlWebpackPlugin({ template: path.resolve(__dirname, './public/index.html') }),
+            new HtmlWebpackPlugin(
+                { template: path.resolve(__dirname, './public/index.html') }
+            ),
             new webpack.ProgressPlugin()
         ],
+        module: {
+            rules: []
+        },
+        resolve: {
+            extensions: ['', '.js', '.jsx']
+        },
+        devtool: 'inline-source-map',
+        devServer: {
+            port: 5050,
+            open: true,
+        }
 
     }
 }

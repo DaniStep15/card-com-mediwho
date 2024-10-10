@@ -1,0 +1,13 @@
+package-lock.json
+.idea
+.vscode
+node_modules
+npm-debug.log
+
+*.map
+*.log
+
+# Environment variables, never commit this file
+.env
+.next/
+build/
