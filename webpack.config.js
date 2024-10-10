@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 module.exports = (env, argv) =>{
     return {
         mode: env.mode || "development",
-        entry: path.resolve(__dirname, './src/index.jsx'),
+        entry: path.resolve(__dirname, './src/index.js'),
         output: {
             path: path.resolve(__dirname, './build'),
             filename: '[name][contenthash].js',
@@ -18,8 +18,10 @@ module.exports = (env, argv) =>{
             ),
             new webpack.ProgressPlugin(),
             new MiniCssExtractPlugin({
-                filename: 'css/[name].[contenthash:8].css',
-                chunkFilename: 'css/[name].[contenthash:8].css',
+                // filename: 'css/[name].[contenthash:8].css',
+                // chunkFilename: 'css/[name].[contenthash:8].css',
+                filename: 'css/[name].css',
+                chunkFilename: 'css/[name].css',
             })
         ],
         module: {
@@ -32,7 +34,14 @@ module.exports = (env, argv) =>{
                         // Translates CSS into CommonJS
                         "css-loader",
                         // Compiles Sass to CSS
-                        "sass-loader",
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sassOptions: {
+                                    includePaths: [path.resolve(__dirname, 'src/styles/styles.scss')],
+                                },
+                            },
+                        }
                     ],
                 },
                 {
