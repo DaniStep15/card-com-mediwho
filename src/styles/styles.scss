@@ -1,338 +1,610 @@
 @import url('https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500');
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Rubik', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  font-style: normal;
-  line-height: normal;
-  overscroll-behavior: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    font-style: normal;
+    line-height: normal;
+    overscroll-behavior: none;
 }
-.cardcom__container{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100vh;
-  .content__container{
+#captcha_div {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.cardcom__container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    .content__title{
-      color: #FF9901;
-      text-align: center;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: normal;
-    }
-    .content__price{
-      color: #4B4C4E;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: normal;
-    }
-    .content__data{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      margin: 80px 0 51px 0;
-      gap: 0 51px;
-      .content__robot_img{
-        position: absolute;
-        left: -190px;
-      }
-      .content__circle_img{
-        position: absolute;
-        top: -100px;
-        right: -140px;
-      }
-      .content__data_left{
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    .content__container {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        height: 220px;
-        width: 340px;
-        perspective: 680px;
-        &.show_back {
-          .card__inner {
-            transform: rotateY(-180deg);
-          }
-        }
-        .card__inner{
-          width: 100%;
-          height: 100%;
-          position: relative;
-          transition: transform 1s;
-          transform-style: preserve-3d;
-          translate: 0 13px;
-          .front__side, .back__side{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(75deg, #329bd3, #004995);
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 13.6px 20.4px;
-            border-radius: 10.2px;
-            overflow: hidden;
-            z-index: 1;
-            backface-visibility: hidden;
-            .map__img {
-              width: 100%;
-              position: absolute;
-              opacity: 0.3;
-              z-index: -1;
-            }
-            .clip__path{
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              top: 0;
-              background-color: rgba(255, 255, 255, 0.19);
-              clip-path: polygon(85% 0, 0 0, 0 100%);
-            }
-            .front__side_topsection{
-              display: flex;
-              flex-direction: row;
-              justify-content: space-between;
-              align-items: center;
-              width: 100%;
-              .chip__img, .type__img{
-                width: 40.8px;
-              }
-            }
-            .front__side_middlesection{
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              flex-direction: row;
-              width: 100%;
-              .c_item{
-                text-align: right;
-                direction: ltr;
-                color: #fff;
-                letter-spacing: 3px;
-                font-size: 23px;
-              }
-            }
-            .front__side_bottomsection{
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              flex-direction: row;
-              width: 100%;
-              .card__holder, .card__date{
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                justify-content: space-between;
-                height: 33.5px;
-                .holder, .holder__name, .valid__date, .valid__date_value{
-                  font-size: 8.16px;
-                  color: #fff;
-                }
-                .holder__name, .valid__date_value{
-                  font-size: 14px;
-                }
-              }
-              .card__date{
-                align-items: end;
-              }
-            }
-
-            .bar{
-              background: #222;
-              width: 340px;
-              height: 40.8px;
-            }
-            .card__cvv{
-              display: flex;
-              flex-direction: column;
-              align-items: end;
-              justify-content: center;
-              width: 100%;
-              height: 41px;
-              background: url("../assets/pattern.png") center/cover no-repeat;
-              //background: url("https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=eaf367a1-8e91-4793-a4a5-7bfeeaae361a") center/cover no-repeat;
-              padding-right: 15px;
-              .cvv_item{
-                color: #000;
-                font-size: 14.96px;
-                direction: ltr;
-                letter-spacing: 3px;
-              }
-            }
-            .card__text{
-              text-align: end;
-              font-size: 8.16px;
-              color: #FFFFFF;
-            }
-          }
-          .back__side {
-            transform: rotateY(180deg);
-          }
-        }
-      }
-      .content__data_right{
-        display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        flex-wrap: wrap;
-        width: 425px;
-        height: 280px;
-        .form-group{
-          position: relative;
-          label {
-            display: block;
-            margin-bottom: 10px;
-            color: #BBB9B9;
-            text-align: right;
-            font-size: 16px;
-            font-weight: 500;
-            direction: rtl;
-          }
-          input[type="text"], input[type="tel"] {
-            border-radius: 9px;
-            border: 1px solid #E1E1E1;
-            background: rgba(255, 255, 255, 0.70);
-            height: 45px;
-            width: 100%;
-            padding: 0 10px;
-            direction: ltr;
-            text-align: right;
-            font-weight: 400;
-            font-size: 15px;
-            color: #B7B7B7;
-            &::placeholder {
-              font-weight: 400;
-              font-size: 15px;
-              color: #B7B7B7;
-            }
-            &:focus {
-              outline: none;
-              &::placeholder {
-                visibility: hidden;
-              }
-            }
-          }
-
-          .card__logo{
-            position: absolute;
-            left: 10px;
-            bottom: 0;
-            height: 45px;
+        .content__title {
+            color: #ff9901;
+            text-align: center;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+        .content__price_row {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            .input__img_card{
+            gap: 0 5px;
+            .content__price,
+            .content__price_title {
+                color: #4b4c4e;
+                font-size: 22px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
             }
-            .identity__logo{
+        }
+        .content__data {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin: 80px 0 51px 0;
+            gap: 0 51px;
+            .content__robot_img {
+                position: absolute;
+                left: -190px;
             }
-          }
-          .span_err{
-            position: absolute;
-            width: max-content;
-            right: 5px;
-            bottom: -16px;
-            color: #FF0013;
-            font-size: 13px;
-            font-weight: 300;
-            visibility: hidden;
-          }
-          &.number{
-            width: 425px;
-          }
-          &.cvv{
-            width: 202px;
-          }
-          &.date{
-            width: 202px;
-          }
-          &.identity{
-            width: 425px;
-          }
+            .content__circle_img {
+                position: absolute;
+                top: -100px;
+                right: -140px;
+            }
+            .content__data_left {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 220px;
+                width: 340px;
+                perspective: 680px;
+                &.show_back {
+                    .card__inner {
+                        transform: rotateY(-180deg);
+                    }
+                }
+                .card__inner {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    transition: transform 1s;
+                    transform-style: preserve-3d;
+                    translate: 0 8px;
+                    .front__side,
+                    .back__side {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(75deg, #329bd3, #004995);
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        padding: 13.6px 20.4px;
+                        border-radius: 10.2px;
+                        overflow: hidden;
+                        z-index: 1;
+                        backface-visibility: hidden;
+                        .map__img {
+                            width: 100%;
+                            position: absolute;
+                            opacity: 0.3;
+                            z-index: -1;
+                        }
+                        .clip__path {
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            top: 0;
+                            background-color: rgba(255, 255, 255, 0.19);
+                            clip-path: polygon(85% 0, 0 0, 0 100%);
+                        }
+                        .front__side_topsection {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            align-items: center;
+                            width: 100%;
+                            .chip__img,
+                            .type__img {
+                                width: 40.8px;
+                            }
+                        }
+                        .front__side_middlesection {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            flex-direction: row;
+                            width: 100%;
+                            .c_item {
+                                text-align: right;
+                                direction: ltr;
+                                color: #fff;
+                                letter-spacing: 3px;
+                                font-size: 23px;
+                            }
+                        }
+                        .front__side_bottomsection {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            flex-direction: row;
+                            width: 100%;
+                            .card__holder,
+                            .card__date {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: start;
+                                justify-content: space-between;
+                                height: 33.5px;
+                                .holder,
+                                .holder__name,
+                                .valid__date,
+                                .valid__date_value {
+                                    font-size: 8.16px;
+                                    color: #fff;
+                                }
+                                .valid__date_value {
+                                    font-size: 14px;
+                                }
+                                .holder__name {
+                                    border: unset;
+                                    background: unset;
+                                    padding: unset;
+                                    text-align: left;
+                                    font-size: 14px;
+                                }
+                            }
+                            .card__date {
+                                align-items: end;
+                            }
+                        }
 
+                        .bar {
+                            background: #222;
+                            width: 340px;
+                            height: 40.8px;
+                        }
+                        .card__cvv {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: end;
+                            justify-content: center;
+                            width: 100%;
+                            height: 41px;
+                            //background: url("../assets/pattern.png") center/cover no-repeat;
+                            background: url('https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=63b85687-943a-493b-ac87-e0578980701e') center/cover no-repeat;
+                            padding-right: 15px;
+                            .cvv_item {
+                                color: #000;
+                                font-size: 14.96px;
+                                direction: ltr;
+                                letter-spacing: 3px;
+                            }
+                        }
+                        .card__text {
+                            text-align: end;
+                            font-size: 8.16px;
+                            color: #ffffff;
+                        }
+                    }
+                    .back__side {
+                        transform: rotateY(180deg);
+                    }
+                }
+            }
+            .content__data_right {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                width: 425px;
+                height: 300px;
+                .form-group {
+                    position: relative;
+                    label {
+                        display: block;
+                        margin-bottom: 10px;
+                        color: #bbb9b9;
+                        text-align: right;
+                        font-size: 16px;
+                        font-weight: 500;
+                        direction: rtl;
+                    }
+                    input[type='text'],
+                    input[type='tel'] {
+                        border-radius: 9px;
+                        border: 1px solid #e1e1e1;
+                        background: rgba(255, 255, 255, 0.7);
+                        height: 45px;
+                        width: 100%;
+                        padding: 0 10px;
+                        direction: ltr;
+                        text-align: right;
+                        font-weight: 400;
+                        font-size: 15px;
+                        color: #b7b7b7;
+                        &::placeholder {
+                            font-weight: 400;
+                            font-size: 15px;
+                            color: #b7b7b7;
+                        }
+                        &:focus {
+                            outline: none;
+                            &::placeholder {
+                                visibility: hidden;
+                            }
+                        }
+                    }
+
+                    .card__logo {
+                        position: absolute;
+                        left: 10px;
+                        bottom: 0;
+                        height: 45px;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        .input__img_card {
+                            width: 35px;
+                        }
+                        .identity__logo {
+                        }
+                    }
+                    .span_err {
+                        position: absolute;
+                        width: max-content;
+                        right: 5px;
+                        bottom: -16px;
+                        color: #ff0013;
+                        font-size: 13px;
+                        font-weight: 300;
+                        visibility: hidden;
+                    }
+                    &.number {
+                        width: 425px;
+                    }
+                    &.cvv {
+                        width: 202px;
+                    }
+                    &.date {
+                        width: 202px;
+                    }
+                    &.identity {
+                        width: 425px;
+                    }
+                    &.terms {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: end;
+                        gap: 0 5px;
+                        width: 425px;
+                        height: 45px;
+                        .checkbox__text {
+                            color: #b3b3b3;
+                            font-size: 16px;
+                            font-weight: 500;
+                        }
+                        .checkbox__link {
+                            color: #ff9901;
+                            font-size: 16px;
+                            font-weight: 500;
+                            text-decoration-line: underline;
+                        }
+                        .checkbox__input {
+                            cursor: pointer;
+                            &:checked {
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-  }
-  .submit__button{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    width: 141px;
-    height: 38px;
-    border-radius: 36px;
-    background-color: #FF9901;
-    color: #FFF;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .outer__links_wrapper{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0 30px;
-    position: absolute;
-    bottom: 10px;
-    .outer__mediwho{
-      position: relative;
-      .outer__text{
-        color: #b3b3b3;
-        font-size: 17px;
+    .submit__button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        width: 141px;
+        height: 38px;
+        border-radius: 36px;
+        background-color: #ff9901;
+        color: #fff;
+        font-size: 14px;
         font-weight: 500;
-      }
-      .outer__link{
-        color: #ff9901;
-        font-size: 17px;
-        font-weight: 500;
-        text-decoration-line: underline;
-      }
-      &:before{
-        content: "";
+    }
+    .outer__links_wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0 30px;
         position: absolute;
-        right: -15px;
-        width: 2px;
-        min-width: 2px;
-        height: 20px;
-        background-color: #b3b3b3;
-      }
-    }
-    .outer__cardcom{
-      .cardcomText{
-        color: #b3b3b3;
-        font-size: 17px;
-        font-weight: 500;
-        span{
-          color: #b3b3b3;
-          font-size: 17px;
-          font-weight: 500;
+        bottom: 10px;
+        .outer__mediwho {
+            position: relative;
+            .outer__text {
+                color: #b3b3b3;
+                font-size: 17px;
+                font-weight: 500;
+            }
+            .outer__link {
+                color: #ff9901;
+                font-size: 17px;
+                font-weight: 500;
+                text-decoration-line: underline;
+            }
+            &:before {
+                content: '';
+                position: absolute;
+                right: -15px;
+                width: 2px;
+                min-width: 2px;
+                height: 20px;
+                background-color: #b3b3b3;
+            }
         }
-        a{
-          color: #ff9901;
-          font-size: 17px;
-          font-weight: 500;
-          text-decoration-line: underline;
+        .outer__cardcom {
+            .cardcomText {
+                color: #b3b3b3;
+                font-size: 17px;
+                font-weight: 500;
+                span {
+                    color: #b3b3b3;
+                    font-size: 17px;
+                    font-weight: 500;
+                }
+                a {
+                    color: #ff9901;
+                    font-size: 17px;
+                    font-weight: 500;
+                    text-decoration-line: underline;
+                }
+            }
         }
-      }
     }
-  }
+}
+
+@media screen and (max-width: 624px) {
+    .cardcom__container {
+        .content__container {
+            //
+            .content__title {
+                font-size: 20px;
+            }
+            //
+            .content__price_row {
+                .content__price,
+                .content__price_title {
+                    font-size: 18px;
+                }
+            }
+            //
+            .content__data {
+                flex-direction: column;
+                margin: 20px 0 10px 0;
+                gap: 20px 0;
+                .content__robot_img {
+                    display: none;
+                }
+                .content__circle_img {
+                    display: none;
+                }
+                .content__data_left {
+                    height: 160px;
+                    width: 234px;
+                    &.show_back {
+                        .card__inner {
+                            transform: rotateY(-180deg);
+                        }
+                    }
+                    .card__inner {
+                        .front__side,
+                        .back__side {
+                            .map__img {
+                            }
+                            .clip__path {
+                            }
+                            .front__side_topsection {
+                                .chip__img,
+                                .type__img {
+                                    width: 25px;
+                                }
+                            }
+                            .front__side_middlesection {
+                                .c_item {
+                                    font-size: 15px;
+                                }
+                            }
+                            .front__side_bottomsection {
+                                .card__holder,
+                                .card__date {
+                                    height: 27px;
+                                    .holder,
+                                    .holder__name,
+                                    .valid__date,
+                                    .valid__date_value {
+                                        span {
+                                            font-size: 12px;
+                                        }
+                                    }
+                                    .valid__date_value {
+                                        font-size: 8px;
+                                    }
+                                    .holder__name {
+                                        font-size: 12px;
+                                    }
+                                }
+                                .card__date {
+                                }
+                            }
+
+                            .bar {
+                                height: 30px;
+                            }
+                            .card__cvv {
+                                height: 31px;
+                                .cvv_item {
+                                    font-size: 12px;
+                                }
+                            }
+                            .card__text {
+                            }
+                        }
+                        .back__side {
+                        }
+                    }
+                }
+                .content__data_right {
+                    width: 75%;
+                    height: 270px;
+                    .form-group {
+                        label {
+                            font-size: 12px;
+                        }
+                        input[type='text'],
+                        input[type='tel'] {
+                            height: 32px;
+                            font-size: 12px;
+                            &::placeholder {
+                                font-size: 12px;
+                            }
+                            &:focus {
+                                &::placeholder {
+                                }
+                            }
+                        }
+                        .card__logo {
+                            position: absolute;
+                            left: 10px;
+                            bottom: 0;
+                            height: 32px;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+                            .input__img_card {
+                                width: 30px;
+                            }
+                            .identity__logo {
+                              width: 20px;
+                            }
+                        }
+                        .span_err {
+                            position: absolute;
+                            width: max-content;
+                            right: 5px;
+                            bottom: -16px;
+                            color: #ff0013;
+                            font-size: 10px;
+                            font-weight: 300;
+                            visibility: hidden;
+                        }
+                        &.number {
+                            width: 100%;
+                        }
+                        &.cvv {
+                            width: 48%;
+                        }
+                        &.date {
+                            width: 48%;
+                        }
+                        &.identity {
+                            width: 100%;
+                        }
+                        &.terms {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: end;
+                            gap: 0 5px;
+                            width: 100%;
+                            height: unset;
+                            .checkbox__text {
+                                color: #b3b3b3;
+                                font-size: 12px;
+                                font-weight: 500;
+                            }
+                            .checkbox__link {
+                                color: #ff9901;
+                                font-size: 12px;
+                                font-weight: 500;
+                                text-decoration-line: underline;
+                            }
+                            .checkbox__input {
+                                cursor: pointer;
+                                &:checked {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .submit__button {
+                width: 118px;
+                height: 32px;
+                font-size: 12px;
+            }
+        }
+        .outer__links_wrapper {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px 0;
+            .outer__mediwho {
+                position: relative;
+                .outer__text {
+                    font-size: 12px;
+                }
+                .outer__link {
+                    font-size: 12px;
+                }
+                &:before {
+                    content: '';
+                    position: absolute;
+                    right: 0;
+                    bottom: -4px;
+                    width: 100%;
+                    min-width: 100%;
+                    height: 0.01rem;
+                    background-color: #b3b3b3;
+                }
+            }
+            .outer__cardcom {
+                .cardcomText {
+                    font-size: 12px;
+                    span {
+                        font-size: 12px;
+                    }
+                    a {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
 }

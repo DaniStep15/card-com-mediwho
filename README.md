@@ -1,3 +1,16 @@
-# card-com-mediwho
+# card-com-mediwho-iframe
 
-# run command - npm run start
+|👇| Includes               |
+|:-:|:-----------------------|
+|📦| Webpack 5              |
+|✂️| Code Splitting         |
+
+### Install dependencies
+```
+> $ npm i
+```
+### Runs the app in the development mode
+Build and open your browser to http://localhost:5050.
+```
+> $ npm run start
+```

@@ -4,24 +4,29 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <link rel="stylesheet" href="/build/css/main.css" />
         <title>Document</title>
     </head>
     <body>
+        <!--    -->
+        <!--        -->
+        <!--    start-->
         <div class="cardcom__container">
             <div class="content__container">
                 <div class="content__title"></div>
-                <div class="content__price"></div>
+                <div class="content__price_row">
+                    <div class="content__price" data-bind="text: summaryTotalSign"></div>
+                    <div class="content__price_title"></div>
+                </div>
                 <div class="content__data">
                     <img
-                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=835ad7c3-f5d4-4340-a324-c85ee291a735'}"
+                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=7625a454-8193-401c-abbc-83d6d6ca1933'}"
                         src="assets/robot.png"
                         alt=""
                         class="content__robot_img"
                         draggable="false"
                     />
                     <img
-                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=cae62bd6-2e10-4e50-9238-968213e08769'}"
+                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=f230473e-c3d2-45f4-a11e-e6623c12b1f3'}"
                         src="assets/circles.png"
                         alt=""
                         class="content__circle_img"
@@ -32,7 +37,7 @@
                             <div class="front__side">
                                 <div class="clip__path"></div>
                                 <img
-                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=24aafb93-7d63-4e13-b618-1292e3c7430e'}"
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=1fef518b-cf2f-431c-b4dd-8b4ca6a379fc'}"
                                     src="assets/card_map.png"
                                     alt=""
                                     class="map__img"
@@ -40,15 +45,15 @@
                                 />
                                 <div class="front__side_topsection">
                                     <img
-                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=f0da09ba-7c5b-4b9a-bf03-72bed9532085'}"
+                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=a46ad25b-3e71-43ba-b36b-227d1ab93b52'}"
                                         src="assets/chip.png"
                                         alt=""
                                         class="chip__img"
                                         draggable="false"
                                     />
                                     <img
-                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=d1ae48db-082f-4ff2-8412-52bb9b133ec4'}"
-                                        src="assets/visa.png"
+                                        data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9d53e231-9c77-4e84-af7a-8655ab7ddbd7'}"
+                                        src="assets/visa_card.png"
                                         alt=""
                                         class="type__img"
                                         draggable="false"
@@ -63,7 +68,7 @@
                                 <div class="front__side_bottomsection">
                                     <div class="card__holder">
                                         <div class="holder"></div>
-                                        <div class="holder__name"></div>
+                                        <input class="holder__name" disabled type="text" maxlength="50" data-bind="value:cardOwnerName.value" id="txtCardOwnerName" />
                                     </div>
                                     <div class="card__date">
                                         <div class="valid__date"></div>
@@ -78,7 +83,7 @@
                             <div class="back__side">
                                 <div class="clip__path"></div>
                                 <img
-                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=24aafb93-7d63-4e13-b618-1292e3c7430e'}"
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=1fef518b-cf2f-431c-b4dd-8b4ca6a379fc'}"
                                     src="assets/card_map.png"
                                     alt="front"
                                     class="map__img"
@@ -95,11 +100,11 @@
                     <div class="content__data_right">
                         <div class="form-group number">
                             <label class="label__number" for="txtCardNumber"></label>
-                            <input type="tel" id="txtCardNumber" placeholder="4111 1111 1111 1111" maxlength="19" />
+                            <input type="tel" data-bind="value:cardNumber.value" id="txtCardNumber" placeholder="4111 1111 1111 1111" maxlength="19" />
                             <span class="span_err number__err"></span>
                             <div class="card__logo">
                                 <img
-                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=2d6e1cf5-1034-4c51-851e-54765e34f435'}"
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=fcba0e71-be73-4def-a85a-6c0bc0c35582'}"
                                     src="assets/no_name_card.png"
                                     alt=""
                                     class="input__img_card"
@@ -109,7 +114,7 @@
                         </div>
                         <div class="form-group cvv">
                             <label class="label__cvv" for="txtCvv"></label>
-                            <input type="text" id="txtCvv" placeholder="123" maxlength="3" />
+                            <input type="text" data-bind="value:cvv.value" id="txtCvv" placeholder="123" maxlength="3" />
                             <span class="span_err cvv__err"></span>
                         </div>
                         <div class="form-group date">
@@ -119,10 +124,10 @@
                         </div>
                         <div class="form-group identity">
                             <label class="label__identity" for="txtCardOwnerID"></label>
-                            <input type="text" id="txtCardOwnerID" maxlength="9" />
+                            <input type="text" data-bind="value:cardOwnerID.value" id="txtCardOwnerID" maxlength="9" />
                             <div class="card__logo">
                                 <img
-                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=87a034e8-4e35-4093-9fd8-996449337ee9'}"
+                                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=320315d2-36fe-41c3-9de5-741710f236d4'}"
                                     src="assets/id_logo.png"
                                     alt=""
                                     class="identity__logo"
@@ -131,10 +136,14 @@
                             </div>
                             <span class="span_err identity__err"></span>
                         </div>
-                        <div class="form-group terms"></div>
+                        <div class="form-group terms">
+                            <a target="_blank" class="checkbox__link" href="https://drive.google.com/file/d/1FKXlXJRLbZWW_UfUwji6zQ0eSPYvnTFc/preview" data-bind="attr: { href : condition.value }"></a>
+                            <div class="checkbox__text"></div>
+                            <input class="checkbox__input" type="checkbox" data-bind="checked: condition.booleanValue" />
+                        </div>
                     </div>
                 </div>
-                <div class="submit__button"></div>
+                <div class="submit__button" data-bind="value: buttonText, click: sendData, hide: hideCreditCardInputs, enable: !loadMode()"></div>
             </div>
             <div class="outer__links_wrapper">
                 <div class="outer__mediwho">
@@ -146,5 +155,8 @@
                 </div>
             </div>
         </div>
+        <!--    end-->
+        <!--    -->
+        <!--    -->
     </body>
 </html>
