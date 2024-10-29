@@ -55,7 +55,7 @@ module.exports = env => {
         resolve: {
             extensions: ['', '.js', '.jsx']
         },
-        devtool: 'inline-source-map',
+        // devtool: 'inline-source-map',
         devServer: {
             port: 5050,
             open: true

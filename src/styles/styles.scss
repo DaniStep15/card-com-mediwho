@@ -64,11 +64,12 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
-            margin: 80px 0 51px 0;
+            margin: 20px 0 50px 0;
             gap: 0 51px;
             .content__robot_img {
                 position: absolute;
-                left: -190px;
+                left: -180px;
+                bottom: -35px;
             }
             .content__circle_img {
                 position: absolute;
@@ -94,7 +95,19 @@
                     position: relative;
                     transition: transform 1s;
                     transform-style: preserve-3d;
-                    translate: 0 2px;
+                    translate: 0 15px;
+                    .card__shadow{
+                        width: 90%;
+                        height: 40.553px;
+                        border-radius: 294px;
+                        background: #BBB;
+                        filter: blur(8px);
+                        position: absolute;
+                        bottom: -12px;
+                        left: 0;
+                        right: 0;
+                        margin: 0 auto;
+                    }
                     .front__side,
                     .back__side {
                         display: flex;
@@ -126,6 +139,7 @@
                             background-color: rgba(255, 255, 255, 0.19);
                             clip-path: polygon(85% 0, 0 0, 0 100%);
                         }
+
                         .front__side_topsection {
                             display: flex;
                             flex-direction: row;
