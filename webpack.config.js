@@ -11,7 +11,8 @@ module.exports = env => {
             path: path.resolve(__dirname, './build'),
             filename: '[name].js',
             assetModuleFilename: 'images/[hash][ext][query]',
-            clean: true
+            clean: true,
+            publicPath: '/' // resolve iframe err
         },
         plugins: [
             new HtmlWebpackPlugin({ template: path.resolve(__dirname, './src/index.html') }),

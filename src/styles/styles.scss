@@ -22,6 +22,14 @@
     justify-content: center;
     width: 100%;
     height: 100vh;
+    .cardcom__date_list {
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        width: 0;
+        height: 0;
+    }
     .content__container {
         display: flex;
         flex-direction: column;
@@ -86,7 +94,7 @@
                     position: relative;
                     transition: transform 1s;
                     transform-style: preserve-3d;
-                    translate: 0 8px;
+                    translate: 0 2px;
                     .front__side,
                     .back__side {
                         display: flex;
@@ -191,7 +199,6 @@
                             justify-content: center;
                             width: 100%;
                             height: 41px;
-                            //background: url("../assets/pattern.png") center/cover no-repeat;
                             background: url('https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=63b85687-943a-493b-ac87-e0578980701e') center/cover no-repeat;
                             padding-right: 15px;
                             .cvv_item {
@@ -219,7 +226,7 @@
                 justify-content: space-between;
                 flex-wrap: wrap;
                 width: 425px;
-                height: 300px;
+                height: 290px;
                 .form-group {
                     position: relative;
                     label {
@@ -256,7 +263,6 @@
                             }
                         }
                     }
-
                     .card__logo {
                         position: absolute;
                         left: 10px;
@@ -295,13 +301,17 @@
                         width: 425px;
                     }
                     &.terms {
+                        // check if have to show terms
                         display: flex;
                         flex-direction: row;
                         align-items: center;
                         justify-content: end;
+                        position: absolute; // remove if need
                         gap: 0 5px;
-                        width: 425px;
-                        height: 45px;
+                        width: 0; // change to 425px if need
+                        height: 0; // change to 45px if need
+                        overflow: hidden; // remove if need
+                        visibility: hidden; // remove if need
                         .checkbox__text {
                             color: #b3b3b3;
                             font-size: 16px;
@@ -318,6 +328,7 @@
                             &:checked {
                             }
                         }
+                        // check if have to show terms
                     }
                 }
             }
@@ -336,6 +347,7 @@
         color: #fff;
         font-size: 14px;
         font-weight: 500;
+        border: none;
     }
     .outer__links_wrapper {
         display: flex;
@@ -481,7 +493,7 @@
                 }
                 .content__data_right {
                     width: 75%;
-                    height: 270px;
+                    height: 235px;
                     .form-group {
                         label {
                             font-size: 12px;
@@ -511,7 +523,7 @@
                                 width: 30px;
                             }
                             .identity__logo {
-                              width: 20px;
+                                width: 20px;
                             }
                         }
                         .span_err {

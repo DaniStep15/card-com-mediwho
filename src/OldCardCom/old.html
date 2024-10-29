@@ -311,6 +311,9 @@
                 </button>
             </div>
             <div id="cardcom-bit-container-div">
+                <!-- ko if: CardcomBitUrl-->
+                <a id="cardcom-bit-ref" data-bind="text: CardcomBitUrlText, attr: {href:CardcomBitUrl, target:'_blank'}" style="text-decoration:none; font-weight:bold;"></a>
+                <!-- /ko -->
                 <label class="cardcom-bit-payment-txt" data-bind="text: CardcomBitPaymentText"></label>
                 <label class="cardcom-bit-payment-txt error" data-bind="text: CardcomBitPaymentError"></label>
                 <div id="cardcom-bit-countdown" class="cardcom-bit-payment-txt" data-bind="visible: ShowCardcomBitCountdown"></div>
@@ -497,7 +500,7 @@
             <div class="cardsLogos">
                 <!-- ko template: { foreach: logos }  -->
                 <div class="cardsLogo">
-                    <img src="$data" class="logoImg" data-bind="attr: { src: $data }" />
+                    <img class="logoImg" data-bind="attr: { src: $data }" />
                 </div>
                 <!-- /ko -->
             </div>
@@ -557,7 +560,7 @@
                 <li data-bind="visible: BitWebPageURL">
                     <span>
                         <span data-bind="if: BitMobilePageURL">או, </span>
-                        <a href="" data-bind="attr: { href: BitWebPageURL }"> לחצו כאן</a>
+                        <a href="" data-bind="attr: { href: BitWebPageURL }">לחצו כאן</a>
                         לפתיחת העמוד מכל דפדפן ומחשב
                     </span>
                 </li>
