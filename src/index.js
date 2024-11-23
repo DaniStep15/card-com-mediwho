@@ -1,37 +1,18 @@
 'use strict'
 import '/src/styles/styles.scss'
+// prettier-ignore
+import { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles } from '/src/utils/static'
 import visaImg from '/src/assets/visa_card.png'
 import visaLogoImg from '/src/assets/visa_logo.png'
 import mCardIcon from '/src/assets/m_card_icon.png'
 import aECard from '/src/assets/a_e_card.png'
 import aELogo from '/src/assets/a_e_logo.png'
 import noNameCard from '/src/assets/no_name_card.png'
-import { images_src, titles, regexp, isIframe, dev_titles_loader } from '/src/Utils/static'
+
+document.querySelector('.loader__element').style.visibility = 'visible'
 document.addEventListener('DOMContentLoaded', function() {
     if (!isIframe) dev_titles_loader.map(({ selector, title, command }) => (document.querySelector(selector)[command] = title))
-    document.querySelector('.content__title').innerText = 'טופס תשלום מאובטח'
-    document.querySelector('.content__price_title').innerText = `סה”כ לתשלום`
-    document.querySelector('.label__number').innerText = `מס' כרטיס`
-    document.querySelector('.label__cvv').innerText = `3 ספרות בגב הכרטיס`
-    document.querySelector('.label__date').innerText = `תוקף כרטיס`
-    document.querySelector('.label__identity').innerText = `תעודת זהות`
-    document.querySelector('.number__err').innerText = `מספר האשראי אינו תקין`
-    document.querySelector('.cvv__err').innerText = `הספרות שהוזנו אינן תקינות`
-    document.querySelector('.date__err').innerText = `התוקף שהוזן אינו תקין`
-    document.querySelector('.identity__err').innerText = `המספר שהוזן אינו תקין`
-    document.querySelector('.submit__button').value = `ביצוע תשלום`
-    document.querySelector('.holder').innerText = `CARD HOLDER`
-    document.querySelector('.valid__date').innerText = `VALID DATE`
-    document.querySelector('.card__text').innerText = 'אין להעביר לשום גורם, גם אם הוא מזדהה כחברת כרטיסי האשראי את מספר כרטיס האשראי המלא ואת התוקף'
-    document.querySelector('.outer__text').innerText = 'מעבר לתשלום מהווה אישור על תנאי'
-    document.querySelector('.outer__link').innerText = 'התקנון'
-    document.querySelector('.checkbox__text').innerText = 'אני מאשר קריאה והסכמה לתנאי'
-    document.querySelector('.checkbox__link').innerText = 'התקנון'
-    document.getElementById('txtCardNumber').value = ''
-    document.getElementById('exp-date').value = ''
-    document.getElementById('txtCvv').value = ''
-    document.getElementById('txtCardOwnerID').value = ''
-    // document.querySelector('.submit__button').style.visibility = 'hidden'
+    setPageTitles()
     // getting elements
     const c_item = document.querySelectorAll('.c_item')
     const d_item = document.querySelectorAll('.d_item')
@@ -52,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const year__select = document.getElementById('validityYear')
     const month__select = document.getElementById('validityMonth')
     const submit__button = document.querySelector('.submit__button')
-
-    const error_handler = (elem, type) => (elem.style.visibility = type)
+    const submit__button_real = document.querySelector('.submit__button_real')
+    const loader__element = document.querySelector('.loader__element')
 
     const setCardImages = (cardTypeImgSrc, inputImgCardSrc, cardComCard, cardComInput) => {
         if (isIframe) {
@@ -94,20 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }[flag]()
     }
 
-    const identity_checker = id => {
-        id = String(id).trim()
-        if (id.length > 9 || isNaN(id)) return false
-        id = id.length < 9 ? ('00000000' + id).slice(-9) : id
-        return (
-            // prettier-ignore
-            Array.from(id, Number).reduce((counter, digit, i) => {
-            const step = digit * ((i % 2) + 1)
-            return counter + (step > 9 ? step - 9 : step)
-        }) % 10 === 0
-        )
-    }
-
-    const ide_checker = input => !identity_checker(input) && error_handler(identity__err, 'visible')
+    const ide_checker = input => !identity_validator(input) && error_handler(identity__err, 'visible')
 
     const cardNumberTest = (input, blur) => {
         let isCardValid = /^\d{16}$/.test(input)
@@ -119,7 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((isCardValid && cards_types) || (input.length === 15 && !regexp?.amex(input)) || (blur && cards_types)) {
             error_handler(number__err, 'visible')
             c_item.forEach(item => (item.style.color = '#FF0013'))
+            return true
         }
+        return false
     }
 
     const dateInputErr = input => {
@@ -147,8 +117,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     submit__button.addEventListener('click', e => {
-        if (e) return e.preventDefault()
-        console.log('clicked')
+        const card_elem = document.getElementById('txtCardNumber').value.replace(/\D/g, '')
+        const date_elem = document.getElementById('exp-date').value
+        const cvv_elem = document.getElementById('txtCvv').value
+        const identity_elem = document.getElementById('txtCardOwnerID').value
+        const ide_check = identity_elem.length ? identity_elem : '00000001'
+
+        if (cardNumberTest(card_elem, true)) return false
+        if (!date_elem.length) {
+            error_handler(date__err, 'visible')
+            d_item.forEach(item => (item.style.color = '#FF0013'))
+            return false
+        }
+        if (!cvv_elem.length) {
+            error_handler(cvv__err, 'visible')
+            document.querySelector('.cvv_item').style.color = '#FF0013'
+            return false
+        }
+        if (ide_checker(ide_check)) return false
+
+        submit__button_real.style.display = 'flex'
+        submit__button.style.display = 'none'
+        submit__button_real.dispatchEvent(new Event('click'))
+        loader__element.style.display = 'flex'
     })
 
     // ***** ***** ***** ***** ***** //

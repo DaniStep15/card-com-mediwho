@@ -11,6 +11,15 @@
         <!--        -->
         <!--    start copy -->
         <div class="cardcom__container">
+            <div class="loader__element">
+                <img
+                    data-bind="attr: {src:'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=cb1ad8a2-8166-469a-92fe-4f5f5305f7d0'}"
+                    src="assets/loading_spinner.png"
+                    alt=""
+                    class="loader__element_image"
+                    draggable="false"
+                />
+            </div>
             <div class="formRow cardcom__date_list">
                 <label class="fieldName" data-bind="text: lblExpiration "></label>
                 <span class="fieldInput validityDate">
@@ -189,7 +198,8 @@
                         </div>
                     </div>
                 </div>
-                <input class="submit__button" type="button" data-bind="value: buttonText, click: sendData, hide: hideCreditCardInputs, enable: !loadMode()" />
+                <input class="submit__button_real" type="button" data-bind="value: buttonText, click: sendData, hide: hideCreditCardInputs, enable: !loadMode()" />
+                <input class="submit__button" type="button" />
             </div>
             <div class="outer__links_wrapper">
                 <div class="outer__mediwho">
@@ -206,3 +216,6 @@
         <!--    end copy-->
     </body>
 </html>
+<!--<script>-->
+<!--    document.getElementById('txtCardNumber').value = '12'-->
+<!--</script>-->
