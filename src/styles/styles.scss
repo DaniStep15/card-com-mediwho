@@ -23,16 +23,18 @@
     width: 100%;
     height: 100vh;
     .loader__element{
-        //display: flex;
-        display: none;
+        display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        //
+        visibility: hidden;
+        width: 0;
+        height: 0;
+        //
         z-index: 100;
         background-image: linear-gradient(
                         0deg,
@@ -237,7 +239,7 @@
                             justify-content: center;
                             width: 100%;
                             height: 41px;
-                            background: url('https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=63b85687-943a-493b-ac87-e0578980701e') center/cover no-repeat;
+                            background: url('https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=882a30f6-ca56-4900-8af4-13f067b85c7e') center/cover no-repeat;
                             padding-right: 15px;
                             .cvv_item {
                                 color: #000;

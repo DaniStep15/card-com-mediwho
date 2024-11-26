@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (input.length && (someday < today || !isFormat)) {
             error_handler(date__err, 'visible')
             d_item.forEach(item => (item.style.color = '#FF0013'))
-            return
+            return true
         }
         if (exMonth.toString().length && exYear.toString().length) {
             // year
@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', function() {
             d_item.forEach(item => (item.style.color = '#FF0013'))
             return false
         }
+
+        if (date_elem.length > 4) {
+            if (dateInputErr(date_elem)) return false
+        }
+
         if (!cvv_elem.length) {
             error_handler(cvv__err, 'visible')
             document.querySelector('.cvv_item').style.color = '#FF0013'
@@ -139,7 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
         submit__button_real.style.display = 'flex'
         submit__button.style.display = 'none'
         submit__button_real.dispatchEvent(new Event('click'))
-        loader__element.style.display = 'flex'
+        loader__element.style.visibility = 'visible'
+        loader__element.style.width = '100%'
+        loader__element.style.height = '100%'
     })
 
     // ***** ***** ***** ***** ***** //
