@@ -124,13 +124,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const ide_check = identity_elem.length ? identity_elem : '00000001'
 
         if (cardNumberTest(card_elem, true)) return false
+
         if (!date_elem.length) {
             error_handler(date__err, 'visible')
             d_item.forEach(item => (item.style.color = '#FF0013'))
             return false
-        }
-
-        if (date_elem.length > 4) {
+        } else {
             if (dateInputErr(date_elem)) return false
         }
 
@@ -139,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.cvv_item').style.color = '#FF0013'
             return false
         }
+
         if (ide_checker(ide_check)) return false
 
         submit__button_real.style.display = 'flex'

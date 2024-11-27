@@ -1,3 +1,5 @@
+const isIframe = window.location.pathname.includes('External')
+
 const { images_src, titles, regexp } = {
     images_src: {
         loading_spinner: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=cb1ad8a2-8166-469a-92fe-4f5f5305f7d0',
@@ -24,7 +26,8 @@ const { images_src, titles, regexp } = {
         lines__cvv: '---'
     },
     regexp: {
-        visa: value => /^(?:4[0-9]{12}(?:[0-9]{3})?)$/.test(value),
+        visa: value => /^4[0-9]/.test(value), /// 4263 9826 4026 9299
+        // visa: value => /^(?:4[0-9]{12}(?:[0-9]{3})?)$/.test(value),
         mastercard: value => /^5[1-5]/.test(value), // 5425 2334 3010 9903
         amex: value => /^3[47]/.test(value), // 3742 4545 5400 126
         discover: value => /^(?:6(?:011|5[0-9]{2})[0-9]{12})$/.test(value), // Discover (e.g., 6011 2345 6789 0123)
@@ -37,9 +40,6 @@ const { images_src, titles, regexp } = {
 }
 
 const setPageTitles = () => {
-    console.log(document.querySelector('.identity__logo'), 'img')
-    console.log(document.querySelector('.checkbox__link'), 'text')
-
     document.querySelector('.content__title').innerText = 'טופס תשלום מאובטח'
     document.querySelector('.content__price_title').innerText = `סה”כ לתשלום`
     document.querySelector('.label__number').innerText = `מס' כרטיס`
@@ -61,25 +61,21 @@ const setPageTitles = () => {
     document.querySelector('.checkbox__link').innerText = 'התקנון'
     document.querySelector('.content__robot_img').setAttribute('data-bind', `attr: {src:'${images_src?.robot}'}`)
     document.querySelector('.content__circle_img').setAttribute('data-bind', `attr: {src:'${images_src?.circles}'}`)
-    document.querySelectorAll('.map__img').forEach(element => {
-        element.setAttribute('data-bind', `attr: {src:'${images_src?.card_map}'}`)
-    })
     document.querySelector('.chip__img').setAttribute('data-bind', `attr: {src:'${images_src?.chip}'}`)
     document.querySelector('.type__img').setAttribute('data-bind', `attr: {src:'${images_src?.visa_card}'}`)
     document.querySelector('.input__img_card').setAttribute('data-bind', `attr: {src:'${images_src?.no_name_card}'}`)
     document.querySelector('.identity__logo').setAttribute('data-bind', `attr: {src:'${images_src?.id_logo}'}`)
     document.querySelector('.loader__element_image').setAttribute('data-bind', `attr: {src:'${images_src?.loading_spinner}'}`)
+    document.querySelectorAll('.map__img').forEach(element => {
+        element.setAttribute('data-bind', `attr: {src:'${images_src?.card_map}'}`)
+    })
 }
-
-const isIframe = window.location.pathname.includes('External')
-
 const dev_titles_loader = [
     { selector: '.content__price', title: titles?.temp__price, command: 'innerText' },
     { selector: '.cardcomText', title: titles?.temp_link, command: 'innerText' },
     { selector: '.holder__name', title: titles?.temp__name, command: 'value' }
 ]
 
-// functions
 const error_handler = (elem, type) => (elem.style.visibility = type)
 
 const identity_validator = id => {
