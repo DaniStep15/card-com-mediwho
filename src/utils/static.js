@@ -15,23 +15,31 @@ const { images_src, titles, regexp } = {
         pattern: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=882a30f6-ca56-4900-8af4-13f067b85c7e',
         robot: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=3edb5c6b-ec53-4a22-9162-e8da4df99e74',
         visa_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=54141311-3830-422a-b5bf-d42d831180dd',
-        visa_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9d53e231-9c77-4e84-af7a-8655ab7ddbd7'
+        visa_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9d53e231-9c77-4e84-af7a-8655ab7ddbd7',
+        d_c_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9372af4c-b81a-40fa-a213-aabe58809d09',
+        isracart_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=076648d2-7f41-4122-8d3e-d9892ad9b9fa',
+        default_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=c8cd08d9-d27a-4ecc-b184-6b6db62f4fb0'
     },
     titles: {
         temp__price: '₪144.00'.replace(/\.\d+$/, ''),
         temp_link: 'הסליקה מתבצעת דרך חברת קארדקום בע"מ',
         temp__name: 'אלי כהן',
         lines__card: '----------------',
+        lines__card_amex: '---------------',
+        lines__card_diners: '--------------',
+        lines__card_isracard: '---------',
         lines__date: '----',
         lines__cvv: '---'
     },
     regexp: {
+        // known card types, in use in Israel
         visa: value => /^4[0-9]/.test(value), /// 4263 9826 4026 9299
-        // visa: value => /^(?:4[0-9]{12}(?:[0-9]{3})?)$/.test(value),
         mastercard: value => /^5[1-5]/.test(value), // 5425 2334 3010 9903
         amex: value => /^3[47]/.test(value), // 3742 4545 5400 126
+        diners: value => /^3[068][0-9]/.test(value), // Diners Club (e.g., 3056 9309 0259 04)
+        isracart: value => /^\d{8,9}$/.test(value), // 1751 0133 08,    10830529,    10830528
+        // other cards type
         discover: value => /^(?:6(?:011|5[0-9]{2})[0-9]{12})$/.test(value), // Discover (e.g., 6011 2345 6789 0123)
-        diners: value => /^(?:3(?:0[0-5]|[68][0-9])[0-9]{11})$/.test(value), // Diners Club (e.g., 3056 9309 0259 04)
         jcb: value => /^(?:35[2-8][0-9]{13})$/.test(value), // JCB (e.g., 3528 0000 0000 0000)
         unionpay: value => /^(?:62[0-9]{14,17})$/.test(value), // China UnionPay (e.g., 6221 2345 6789 0000)
         maestro: value => /^(?:5[06789]|6[389])[0-9]{0,15}$/.test(value), // Maestro (e.g., 6759 1234 5678 9012 345)
@@ -62,7 +70,7 @@ const setPageTitles = () => {
     document.querySelector('.content__robot_img').setAttribute('data-bind', `attr: {src:'${images_src?.robot}'}`)
     document.querySelector('.content__circle_img').setAttribute('data-bind', `attr: {src:'${images_src?.circles}'}`)
     document.querySelector('.chip__img').setAttribute('data-bind', `attr: {src:'${images_src?.chip}'}`)
-    document.querySelector('.type__img').setAttribute('data-bind', `attr: {src:'${images_src?.visa_card}'}`)
+    document.querySelector('.type__img').setAttribute('data-bind', `attr: {src:'${images_src?.default_logo}'}`)
     document.querySelector('.input__img_card').setAttribute('data-bind', `attr: {src:'${images_src?.no_name_card}'}`)
     document.querySelector('.identity__logo').setAttribute('data-bind', `attr: {src:'${images_src?.id_logo}'}`)
     document.querySelector('.loader__element_image').setAttribute('data-bind', `attr: {src:'${images_src?.loading_spinner}'}`)
@@ -76,7 +84,14 @@ const dev_titles_loader = [
     { selector: '.holder__name', title: titles?.temp__name, command: 'value' }
 ]
 
-const error_handler = (elem, type) => (elem.style.visibility = type)
+const error_handler = (span_elem, card_elem, type, color) => {
+    if (span_elem) {
+        span_elem.style.visibility = type
+    }
+    if (card_elem) {
+        card_elem.length ? card_elem.forEach(item => (item.style.color = color)) : (card_elem.style.color = color)
+    }
+}
 
 const identity_validator = id => {
     id = String(id).trim()
@@ -91,4 +106,75 @@ const identity_validator = id => {
     )
 }
 
-export { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles }
+const luhn_algorithm_check = input => {
+    let cri = input.split('').map(Number)
+    let total = 0
+    for (let i = cri.length - 2; i >= 0; i = i - 2) {
+        let tv = cri[i]
+        tv = tv * 2
+        if (tv > 9) {
+            tv = (tv % 10) + 1
+        }
+        cri[i] = tv
+    }
+    for (let i = 0; i < cri.length; i++) {
+        total += cri[i]
+    }
+    return total % 10 === 0
+}
+
+const isracard_algorithm_check = input => {
+    let cardNumber = input.padStart(9, '0')
+    const digits = cardNumber.split('').map(Number)
+    const weights = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+    const weightedSums = digits.map((digit, index) => digit * weights[index])
+    const totalSum = weightedSums.reduce((acc, val) => acc + val, 0)
+    return totalSum % 11 === 0
+}
+
+const isKnowCard = input => {
+    if (regexp.amex(input)) return { name: 'American Express', counts: 15 }
+    if (regexp.visa(input)) return { name: 'Visa', counts: 16 }
+    if (regexp.mastercard(input)) return { name: 'MasterCard', counts: 16 }
+    if (regexp.discover(input)) return { name: 'Discover', counts: 16 }
+    if (regexp.diners(input)) return { name: 'Diners Club', counts: 14 }
+    if (regexp.jcb(input)) return { name: 'JCB', counts: 16 }
+    if (regexp.unionpay(input)) return { name: 'UnionPay', counts: 16 }
+    if (regexp.maestro(input)) return { name: 'Maestro', counts: 16 } // Maestro can vary; update if needed
+    if (regexp.uatp(input)) return { name: 'UATP', counts: 15 }
+    if (regexp.isracart(input)) return { name: 'Isracard', counts: 8 } // check~~~~~~~~~~~~~~~~~~~
+    return null
+}
+
+////// this function is for using in cardcom constructor only
+
+const lockThis = async (submit, error) => {
+    const possible_errors = {
+        card_number_error: { value: 'מספר כרטיס שגוי', element: document.querySelector('.number__err') },
+        need_card_num: { value: 'מספר כרטיס אשראי שדה חובה', element: document.querySelector('.number__err') },
+        need_cvv: { value: 'מספר CVV חובה', element: document.querySelector('.cvv__err') },
+        need_name: { value: 'שם בעל הכרטיס חובה', element: document.querySelector('.number__err') },
+        need_ide: { value: 'ת.ז. שדה חובה', element: document.querySelector('.identity__err') },
+        need_terms: { value: 'יש לסמן קריאה והסכמה לתקנון', element: 'element' }
+    }
+
+    await submit()
+
+    if (error.hasMessages()) {
+        error.messages().map(({ message }) => {
+            console.log(message)
+
+            const errorKey = Object.keys(possible_errors).find(key => possible_errors[key].value === message)
+
+            if (errorKey) {
+                console.log(`Error key found: ${possible_errors[errorKey].element}`)
+                possible_errors[errorKey].element.style.visibility = 'visible'
+            } else {
+                console.log('Error key not found.')
+            }
+            // cvv__err_.style.visibility = 'visible'
+        })
+    }
+}
+
+export { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard }

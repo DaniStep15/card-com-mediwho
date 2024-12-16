@@ -4,14 +4,15 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Document</title>
+        <title>Cardcom Iframe</title>
+        <link rel="icon" href="https://www.cardcom.solutions/wp-content/uploads/2021/10/cropped-cardcom.png" type="image/x-icon" />
     </head>
     <body>
         <!--    -->
         <!--        -->
         <!--    start copy -->
         <div class="cardcom__container">
-            <div class="loader__element">
+            <div class="loader__element" data-bind="visible: !error.hasMessages()">
                 <img src="assets/loading_spinner.png" alt="" class="loader__element_image" draggable="false" />
             </div>
             <div class="formRow cardcom__date_list">
@@ -58,7 +59,7 @@
                                 <img src="assets/card_map.png" alt="" class="map__img" draggable="false" />
                                 <div class="front__side_topsection">
                                     <img src="assets/chip.png" alt="" class="chip__img" draggable="false" />
-                                    <img src="assets/visa_card.png" alt="" class="type__img" draggable="false" />
+                                    <img src="assets/default_logo.png" alt="" class="type__img" draggable="false" />
                                 </div>
                                 <div class="front__side_middlesection">
                                     <span class="c_item c_first">----</span>
@@ -126,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-                <input class="submit__button_real" type="button" data-bind="value: buttonText, click: sendData, hide: hideCreditCardInputs, enable: !loadMode()" />
+                <input class="submit__button_real" type="button" data-bind="value: buttonText, click: () => lockThis(sendData, error), hide: hideCreditCardInputs, enable: !loadMode()" />
                 <input class="submit__button" type="button" />
             </div>
             <div class="outer__links_wrapper">
@@ -144,6 +145,3 @@
         <!--    end copy-->
     </body>
 </html>
-<!--<script>-->
-<!--    document.getElementById('txtCardNumber').value = '12'-->
-<!--</script>-->

@@ -1,13 +1,16 @@
 'use strict'
 import '/src/styles/styles.scss'
 // prettier-ignore
-import { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles } from '/src/utils/static'
+import { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard } from '/src/utils/static'
 import visaImg from '/src/assets/visa_card.png'
 import visaLogoImg from '/src/assets/visa_logo.png'
 import mCardIcon from '/src/assets/m_card_icon.png'
 import aECard from '/src/assets/a_e_card.png'
 import aELogo from '/src/assets/a_e_logo.png'
 import noNameCard from '/src/assets/no_name_card.png'
+import noNameCardLogo from '/src/assets/default_logo.png'
+import dinersCardLogo from '/src/assets/d_c_logo.png'
+import israCardLogo from '/src/assets/isracart_logo.png'
 
 document.querySelector('.loader__element').style.visibility = 'visible'
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const submit__button = document.querySelector('.submit__button')
     const submit__button_real = document.querySelector('.submit__button_real')
     const loader__element = document.querySelector('.loader__element')
+    const terms_checkbox = document.querySelector('.checkbox__input')
 
     const setCardImages = (cardTypeImgSrc, inputImgCardSrc, cardComCard, cardComInput) => {
         if (isIframe) {
@@ -49,10 +53,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const card_type = value => {
-        if (regexp?.mastercard(value)) return setCardImages(mCardIcon, mCardIcon, 'm_card_icon', 'm_card_icon')
-        if (regexp?.visa(value)) return setCardImages(visaImg, visaLogoImg, 'visa_card', 'visa_logo')
-        if (regexp?.amex(value)) return setCardImages(aECard, aELogo, 'a_e_card', 'a_e_logo')
-        return setCardImages(visaImg, noNameCard, 'visa_card', 'no_name_card')
+        if (regexp?.mastercard(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(mCardIcon, mCardIcon, 'm_card_icon', 'm_card_icon')
+        if (regexp?.visa(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(visaImg, visaLogoImg, 'visa_card', 'visa_logo')
+        if (regexp?.amex(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(aECard, aELogo, 'a_e_card', 'a_e_logo')
+        if (regexp?.diners(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(dinersCardLogo, dinersCardLogo, 'd_c_logo', 'd_c_logo')
+        if (regexp.isracart(value) && isracard_algorithm_check(value)) return setCardImages(israCardLogo, israCardLogo, 'isracart_logo', 'isracart_logo')
+        return setCardImages(noNameCardLogo, noNameCard, 'default_logo', 'no_name_card')
     }
 
     const card_handling = (value, replace_, initial_, flag) => {
@@ -75,21 +81,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }[flag]()
     }
 
-    const ide_checker = input => !identity_validator(input) && error_handler(identity__err, 'visible')
-
-    const cardNumberTest = (input, blur) => {
-        let isCardValid = /^\d{16}$/.test(input)
-        // prettier-ignore
-        const cards_types = !regexp?.amex(input) && !regexp?.visa(input)  && !regexp?.mastercard(input) &&
-                                     !regexp?.discover(input) && !regexp?.jcb(input) && !regexp?.unionpay(input) &&
-                                     !regexp?.maestro(input) && !regexp?.uatp(input) && !regexp?.diners(input)
-
-        if ((isCardValid && cards_types) || (input.length === 15 && !regexp?.amex(input)) || (blur && cards_types)) {
-            error_handler(number__err, 'visible')
-            c_item.forEach(item => (item.style.color = '#FF0013'))
+    const ide_checker = input => {
+        if (!identity_validator(input)) {
+            error_handler(identity__err, null, 'visible', null)
             return true
         }
         return false
+    }
+
+    const cardNumberTest = (input, blur) => {
+        if ((blur && input.length) || (isKnowCard(input) && input.length >= isKnowCard(input)?.counts)) {
+            if (isKnowCard(input) && (luhn_algorithm_check(input) || isracard_algorithm_check(input))) {
+                return false
+            } else {
+                error_handler(number__err, c_item, 'visible', '#FF0013')
+                return true
+            }
+        }
     }
 
     const dateInputErr = input => {
@@ -102,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const isFormat = input.match(reg_date)
 
         if (input.length && (someday < today || !isFormat)) {
-            error_handler(date__err, 'visible')
-            d_item.forEach(item => (item.style.color = '#FF0013'))
+            error_handler(date__err, d_item, 'visible', '#FF0013')
             return true
         }
+
         if (exMonth.toString().length && exYear.toString().length) {
             // year
             Array.from(year__select.options).forEach(option => option.value === exYear.toString() && (option.selected = true))
@@ -113,52 +121,34 @@ document.addEventListener('DOMContentLoaded', function() {
             // month
             Array.from(month__select.options).forEach(option => option.value === exMonth.toString() && (option.selected = true))
             month__select.dispatchEvent(new Event('change'))
+
+            // set terms true, as default then date is valid
+            terms_checkbox.checked = true
+            terms_checkbox.dispatchEvent(new Event('click'))
+
+            return false
         }
     }
-
-    submit__button.addEventListener('click', e => {
-        const card_elem = document.getElementById('txtCardNumber').value.replace(/\D/g, '')
-        const date_elem = document.getElementById('exp-date').value
-        const cvv_elem = document.getElementById('txtCvv').value
-        const identity_elem = document.getElementById('txtCardOwnerID').value
-        const ide_check = identity_elem.length ? identity_elem : '00000001'
-
-        if (cardNumberTest(card_elem, true)) return false
-
-        if (!date_elem.length) {
-            error_handler(date__err, 'visible')
-            d_item.forEach(item => (item.style.color = '#FF0013'))
-            return false
-        } else {
-            if (dateInputErr(date_elem)) return false
-        }
-
-        if (!cvv_elem.length) {
-            error_handler(cvv__err, 'visible')
-            document.querySelector('.cvv_item').style.color = '#FF0013'
-            return false
-        }
-
-        if (ide_checker(ide_check)) return false
-
-        submit__button_real.style.display = 'flex'
-        submit__button.style.display = 'none'
-        submit__button_real.dispatchEvent(new Event('click'))
-        loader__element.style.visibility = 'visible'
-        loader__element.style.width = '100%'
-        loader__element.style.height = '100%'
-    })
 
     // ***** ***** ***** ***** ***** //
     // ***** card number validation section part ***** //
     // ***** ***** ***** ***** ***** //
     document.getElementById('txtCardNumber').addEventListener('input', function(e) {
         let input = e.target.value.replace(/\D/g, '')
-        error_handler(number__err, 'hidden')
+        const isIsracard = /^\d{8,9}$/.test(input) && isracard_algorithm_check(input)
+        // prettier-ignore
+        const isAmexOrDiners =
+            regexp?.amex(input) && !isIsracard ? titles?.lines__card_amex
+            : regexp?.diners(input)&& !isIsracard ? titles?.lines__card_diners
+            : isIsracard ? titles?.lines__card_isracard
+            : titles?.lines__card
+
+        e.target.maxLength = regexp?.amex(input) ? 18 : regexp?.diners(input) ? 17 : 19
+
         card_type(input, false)
-        card_handling(input, ' ', titles?.lines__card, 'card')
-        c_item.forEach(item => (item.style.color = '#fff'))
-        cardNumberTest(input)
+        card_handling(input, ' ', isAmexOrDiners, 'card')
+        cardNumberTest(input, false, e.target.maxLength)
+        error_handler(number__err, c_item, 'hidden', '#fff')
 
         e.target.value = input.replace(/(.{4})/g, '$1 ').trim()
     })
@@ -172,38 +162,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // ***** ***** ***** ***** ***** //
     document.getElementById('exp-date').addEventListener('input', function(e) {
         let input = e.target.value.replace(/\D/g, '')
-        error_handler(date__err, 'hidden')
+
+        error_handler(date__err, d_item, 'hidden', '#fff')
+
         card_handling(input, ' ', titles?.lines__date, 'date')
-        d_item.forEach(item => (item.style.color = '#fff'))
         // prettier-ignore
         const output = input.replace(/\//g, '').substring(0, 2) + (input.length > 2 ? '/' : '') + input.replace(/\//g, '').substring(2, 4).trim()
         output.length === 5 && dateInputErr(output)
         e.target.value = output
     })
-    document.getElementById('exp-date').addEventListener('blur', function(e) {
-        let input = e.target.value
-        dateInputErr(input)
-    })
+    document.getElementById('exp-date').addEventListener('blur', e => dateInputErr(e.target.value))
 
     // ***** ***** ***** ***** ***** //
     // ***** card cvv validation section part ***** //
     // ***** ***** ***** ***** ***** //
-    document.getElementById('txtCvv').addEventListener('input', function(e) {
-        let input = e.target.value.replace(/\D/g, '')
-        error_handler(cvv__err, 'hidden')
-        card_handling(input, ' ', titles?.lines__cvv, 'cvv')
-        document.querySelector('.cvv_item').style.color = '#000'
+    document.getElementById('txtCvv').addEventListener('input', function({ target }) {
+        let input = target.value.replace(/\D/g, '')
 
-        e.target.value = input.trim()
+        error_handler(cvv__err, cvv_item, 'hidden', '#000')
+        card_handling(input, ' ', titles?.lines__cvv, 'cvv')
+
+        target.value = input
     })
 
-    document.getElementById('txtCvv').addEventListener('blur', function(e) {
-        let length = e.target.value.length
+    document.getElementById('txtCvv').addEventListener('blur', function({ target }) {
+        if (target.value.length && target.value.length < 3) error_handler(cvv__err, cvv_item, 'visible', '#FF0013')
         content__data_left.classList.remove('show_back')
-        if (length && length < 3) {
-            error_handler(cvv__err, 'visible')
-            document.querySelector('.cvv_item').style.color = '#FF0013'
-        }
     })
 
     document.getElementById('txtCvv').addEventListener('focus', e => content__data_left.classList.add('show_back'))
@@ -213,10 +197,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // ***** ***** ***** ***** ***** //
     document.getElementById('txtCardOwnerID').addEventListener('input', function(e) {
         let input = e.target.value.replace(/\D/g, '')
-        error_handler(identity__err, 'hidden')
+        error_handler(identity__err, null, 'hidden', null)
+
         input.length === 9 && ide_checker(input)
         e.target.value = input.trim()
     })
 
     document.getElementById('txtCardOwnerID').addEventListener('blur', e => ide_checker(e.target.value))
+
+    // ***** ***** ***** ***** ***** //
+    // ***** submit validation section part ***** //
+    // ***** ***** ***** ***** ***** //
+    submit__button.addEventListener('click', e => {
+        const card_elem = document.getElementById('txtCardNumber').value.replace(/\D/g, '')
+        const date_elem = document.getElementById('exp-date').value
+        const cvv_elem = document.getElementById('txtCvv').value
+        const identity_elem = document.getElementById('txtCardOwnerID').value
+
+        const ide_check = identity_elem.length ? identity_elem : '00000001'
+        const card_num_check = card_elem.length ? card_elem : '0000'
+        const date_check = date_elem.length ? date_elem : '22/22'
+
+        if (cardNumberTest(card_num_check, true)) return
+        if (dateInputErr(date_check)) return
+        if (!cvv_elem.length) return error_handler(cvv__err, cvv_item, 'visible', '#FF0013')
+        if (ide_checker(ide_check)) return
+
+        submit__button_real.style.display = 'flex'
+        submit__button.style.display = 'none'
+        submit__button_real.dispatchEvent(new Event('click'))
+        loader__element.style.visibility = 'visible'
+        loader__element.style.width = '100%'
+        loader__element.style.height = '100%'
+    })
 })
