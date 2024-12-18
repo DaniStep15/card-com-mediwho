@@ -78,7 +78,7 @@ html {
                 color: #4b4c4e;
                 font-size: 22px;
                 font-style: normal;
-                font-weight: 600;
+                font-weight: 500;
                 line-height: normal;
             }
         }
@@ -92,13 +92,13 @@ html {
             gap: 0 51px;
             .content__robot_img {
                 position: absolute;
-                left: -180px;
-                bottom: -35px;
+                left: -202px;
+                bottom: -62px;
             }
             .content__circle_img {
                 position: absolute;
-                top: -100px;
-                right: -140px;
+                top: -113px;
+                right: -165px;
             }
             .content__data_left {
                 display: flex;
@@ -396,45 +396,45 @@ html {
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 0 30px;
+        gap: 0 20px;
         position: absolute;
         bottom: 20px;
         .outer__mediwho {
             position: relative;
             .outer__text {
                 color: #b3b3b3;
-                font-size: 17px;
-                font-weight: 500;
+                font-size: 15px;
+                font-weight: 400;
             }
             .outer__link {
                 color: #ff9901;
-                font-size: 17px;
+                font-size: 15px;
                 font-weight: 500;
                 text-decoration-line: underline;
             }
             &:before {
-                content: '';
+                content: "";
                 position: absolute;
-                right: -15px;
-                width: 2px;
-                min-width: 2px;
-                height: 20px;
+                right: -11.5px;
+                width: 1px;
+                min-width: 1px;
+                height: 19px;
                 background-color: #b3b3b3;
             }
         }
         .outer__cardcom {
             .cardcomText {
                 color: #b3b3b3;
-                font-size: 17px;
-                font-weight: 500;
+                //font-size: 17px;
+                //font-weight: 500;
                 span {
                     color: #b3b3b3;
-                    font-size: 17px;
-                    font-weight: 500;
+                    font-size: 15px;
+                    font-weight: 400;
                 }
                 a {
                     color: #ff9901;
-                    font-size: 17px;
+                    font-size: 15px;
                     font-weight: 500;
                     text-decoration-line: underline;
                 }

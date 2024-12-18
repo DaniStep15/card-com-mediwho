@@ -1,14 +1,13 @@
 'use strict'
 import '/src/styles/styles.scss'
 // prettier-ignore
-import { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard } from '/src/utils/static'
+import { images_src, titles, regexp, isIframe, dev_titles_loader, dispatchEventErrors, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard } from '/src/utils/static'
 import visaImg from '/src/assets/visa_card.png'
 import visaLogoImg from '/src/assets/visa_logo.png'
 import mCardIcon from '/src/assets/m_card_icon.png'
 import aECard from '/src/assets/a_e_card.png'
 import aELogo from '/src/assets/a_e_logo.png'
 import noNameCard from '/src/assets/no_name_card.png'
-import noNameCardLogo from '/src/assets/default_logo.png'
 import dinersCardLogo from '/src/assets/d_c_logo.png'
 import israCardLogo from '/src/assets/isracart_logo.png'
 
@@ -40,6 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loader__element = document.querySelector('.loader__element')
     const terms_checkbox = document.querySelector('.checkbox__input')
 
+    const card_num_input = document.getElementById('txtCardNumber')
+    const card_exp_input = document.getElementById('exp-date')
+    const card_cvv_input = document.getElementById('txtCvv')
+    const card_ide_input = document.getElementById('txtCardOwnerID')
+
     const setCardImages = (cardTypeImgSrc, inputImgCardSrc, cardComCard, cardComInput) => {
         if (isIframe) {
             card__type_img.setAttribute('src', images_src[cardComCard])
@@ -58,49 +62,55 @@ document.addEventListener('DOMContentLoaded', function() {
         if (regexp?.amex(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(aECard, aELogo, 'a_e_card', 'a_e_logo')
         if (regexp?.diners(value) && !(regexp.isracart(value) && isracard_algorithm_check(value))) return setCardImages(dinersCardLogo, dinersCardLogo, 'd_c_logo', 'd_c_logo')
         if (regexp.isracart(value) && isracard_algorithm_check(value)) return setCardImages(israCardLogo, israCardLogo, 'isracart_logo', 'isracart_logo')
-        return setCardImages(noNameCardLogo, noNameCard, 'default_logo', 'no_name_card')
+        return setCardImages('#', noNameCard, '#', 'no_name_card')
     }
 
-    const card_handling = (value, replace_, initial_, flag) => {
+    const card_handling = (value, replace_, initial_, flag, reset) => {
         let cleanedValue = value.replaceAll(replace_, '')
         let formattedValue = cleanedValue + initial_.slice(cleanedValue.length)
         return {
             card: () => {
-                c_first.innerText = formattedValue.slice(0, 4)
-                c_second.innerText = formattedValue.slice(4, 8)
-                c_third.innerText = formattedValue.slice(8, 12)
-                c_fourth.innerText = formattedValue.slice(12, formattedValue.length)
+                c_first.innerText = reset ? '----' : formattedValue.slice(0, 4)
+                c_second.innerText = reset ? '----' : formattedValue.slice(4, 8)
+                c_third.innerText = reset ? '----' : formattedValue.slice(8, 12)
+                c_fourth.innerText = reset ? '----' : formattedValue.slice(12, formattedValue.length)
             },
             date: () => {
-                d_first.innerText = formattedValue.slice(0, 2)
-                d_second.innerText = formattedValue.slice(2, formattedValue.length)
+                d_first.innerText = reset ? '--' : formattedValue.slice(0, 2)
+                d_second.innerText = reset ? '--' : formattedValue.slice(2, formattedValue.length)
             },
             cvv: () => {
-                cvv_item.innerText = formattedValue
+                cvv_item.innerText = reset ? '---' : formattedValue
             }
         }[flag]()
     }
 
-    const ide_checker = input => {
-        if (!identity_validator(input)) {
-            error_handler(identity__err, null, 'visible', null)
-            return true
-        }
-        return false
+    const ide_checker = (input, blur) => {
+        if (identity_validator(input)) return false
+        error_handler(identity__err, null, 'visible', null)
+        if (blur) dispatchEventErrors(card_ide_input)
+        return true
     }
 
     const cardNumberTest = (input, blur) => {
-        if ((blur && input.length) || (isKnowCard(input) && input.length >= isKnowCard(input)?.counts)) {
-            if (isKnowCard(input) && (luhn_algorithm_check(input) || isracard_algorithm_check(input))) {
-                return false
-            } else {
-                error_handler(number__err, c_item, 'visible', '#FF0013')
-                return true
+        const card_in_use = card__type_img.getAttribute('src') !== '#'
+        const countByType = isKnowCard(input) && card_in_use ? isKnowCard(input)?.counts.find(i => i === input.length) : 16
+
+        if ((blur && input.length) || input.length === countByType) {
+            let isCardValid = isKnowCard(input) && (luhn_algorithm_check(input) || isracard_algorithm_check(input))
+            if (isCardValid) return false
+
+            error_handler(number__err, c_item, 'visible', '#FF0013', true)
+            if (blur) {
+                card_handling(input, ' ', '----', 'card', true)
+                card_type('0')
+                dispatchEventErrors(card_num_input)
             }
+            return true
         }
     }
 
-    const dateInputErr = input => {
+    const dateInputErr = (input, blur) => {
         const reg_date = /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/
         const exMonth = +input.slice(0, 2)
         const exYear = '20' + +input.slice(3, input.length)
@@ -111,6 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (input.length && (someday < today || !isFormat)) {
             error_handler(date__err, d_item, 'visible', '#FF0013')
+
+            if (blur) {
+                card_handling(input, ' ', '---', 'date', true)
+                dispatchEventErrors(card_exp_input)
+            }
+
             return true
         }
 
@@ -134,6 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ***** card number validation section part ***** //
     // ***** ***** ***** ***** ***** //
     document.getElementById('txtCardNumber').addEventListener('input', function(e) {
+        error_handler(number__err, c_item, 'hidden', '#fff')
+
         let input = e.target.value.replace(/\D/g, '')
         const isIsracard = /^\d{8,9}$/.test(input) && isracard_algorithm_check(input)
         // prettier-ignore
@@ -144,11 +162,9 @@ document.addEventListener('DOMContentLoaded', function() {
             : titles?.lines__card
 
         e.target.maxLength = regexp?.amex(input) ? 18 : regexp?.diners(input) ? 17 : 19
-
         card_type(input, false)
-        card_handling(input, ' ', isAmexOrDiners, 'card')
+        card_handling(input, ' ', isAmexOrDiners, 'card', false)
         cardNumberTest(input, false, e.target.maxLength)
-        error_handler(number__err, c_item, 'hidden', '#fff')
 
         e.target.value = input.replace(/(.{4})/g, '$1 ').trim()
     })
@@ -168,10 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
         card_handling(input, ' ', titles?.lines__date, 'date')
         // prettier-ignore
         const output = input.replace(/\//g, '').substring(0, 2) + (input.length > 2 ? '/' : '') + input.replace(/\//g, '').substring(2, 4).trim()
-        output.length === 5 && dateInputErr(output)
+        output.length === 5 && dateInputErr(output, false)
         e.target.value = output
     })
-    document.getElementById('exp-date').addEventListener('blur', e => dateInputErr(e.target.value))
+    document.getElementById('exp-date').addEventListener('blur', e => dateInputErr(e.target.value, true))
 
     // ***** ***** ***** ***** ***** //
     // ***** card cvv validation section part ***** //
@@ -186,8 +202,15 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     document.getElementById('txtCvv').addEventListener('blur', function({ target }) {
-        if (target.value.length && target.value.length < 3) error_handler(cvv__err, cvv_item, 'visible', '#FF0013')
-        content__data_left.classList.remove('show_back')
+        if (target.value.length && target.value.length < 3) {
+            error_handler(cvv__err, cvv_item, 'visible', '#FF0013')
+
+            card_handling(target.value, ' ', '-', 'cvv', true)
+            dispatchEventErrors(card_cvv_input)
+            content__data_left.classList.add('show_back')
+        } else {
+            content__data_left.classList.remove('show_back')
+        }
     })
 
     document.getElementById('txtCvv').addEventListener('focus', e => content__data_left.classList.add('show_back'))
@@ -199,11 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
         let input = e.target.value.replace(/\D/g, '')
         error_handler(identity__err, null, 'hidden', null)
 
-        input.length === 9 && ide_checker(input)
+        input.length === 9 && ide_checker(input, false)
         e.target.value = input.trim()
     })
 
-    document.getElementById('txtCardOwnerID').addEventListener('blur', e => ide_checker(e.target.value))
+    document.getElementById('txtCardOwnerID').addEventListener('blur', e => ide_checker(e.target.value, true))
 
     // ***** ***** ***** ***** ***** //
     // ***** submit validation section part ***** //
@@ -219,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const date_check = date_elem.length ? date_elem : '22/22'
 
         if (cardNumberTest(card_num_check, true)) return
-        if (dateInputErr(date_check)) return
+        if (dateInputErr(date_check, true)) return
         if (!cvv_elem.length) return error_handler(cvv__err, cvv_item, 'visible', '#FF0013')
         if (ide_checker(ide_check)) return
 

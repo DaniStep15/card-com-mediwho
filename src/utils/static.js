@@ -4,21 +4,20 @@ const { images_src, titles, regexp } = {
     images_src: {
         loading_spinner: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=cb1ad8a2-8166-469a-92fe-4f5f5305f7d0',
         a_e_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=e77d2ae0-6ede-49d9-88ad-374d8d07786e',
-        a_e_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=1af838c5-668e-42c9-beca-673a91c84a67',
+        a_e_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=eee7de87-8850-4240-8f8a-c1eb713ef8ac',
         card_map: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=1fef518b-cf2f-431c-b4dd-8b4ca6a379fc',
         chip: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=a46ad25b-3e71-43ba-b36b-227d1ab93b52',
         circles: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=f230473e-c3d2-45f4-a11e-e6623c12b1f3',
         id_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=7f8622e7-8894-4974-b633-9a7388a551ce',
         m_card_icon: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9e9b7ec5-4257-480e-9a7a-68a598aeb12e',
         m_card_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=87c7256d-9662-4fad-a219-b40bf5ef0a0c',
-        no_name_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=50f7f223-89ad-49b2-a7c1-9b06e3edb961',
+        no_name_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=accf42f9-b074-4efc-83d6-8f6282b0faca',
         pattern: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=882a30f6-ca56-4900-8af4-13f067b85c7e',
         robot: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=3edb5c6b-ec53-4a22-9162-e8da4df99e74',
-        visa_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=54141311-3830-422a-b5bf-d42d831180dd',
+        visa_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=3d76c387-1713-498f-b31e-cc9888ce83b4',
         visa_card: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9d53e231-9c77-4e84-af7a-8655ab7ddbd7',
         d_c_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=9372af4c-b81a-40fa-a213-aabe58809d09',
-        isracart_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=076648d2-7f41-4122-8d3e-d9892ad9b9fa',
-        default_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=c8cd08d9-d27a-4ecc-b184-6b6db62f4fb0'
+        isracart_logo: 'https://secure.cardcom.solutions/LoadImage.ashx?c=1&g=076648d2-7f41-4122-8d3e-d9892ad9b9fa'
     },
     titles: {
         temp__price: '₪144.00'.replace(/\.\d+$/, ''),
@@ -70,7 +69,7 @@ const setPageTitles = () => {
     document.querySelector('.content__robot_img').setAttribute('data-bind', `attr: {src:'${images_src?.robot}'}`)
     document.querySelector('.content__circle_img').setAttribute('data-bind', `attr: {src:'${images_src?.circles}'}`)
     document.querySelector('.chip__img').setAttribute('data-bind', `attr: {src:'${images_src?.chip}'}`)
-    document.querySelector('.type__img').setAttribute('data-bind', `attr: {src:'${images_src?.default_logo}'}`)
+    document.querySelector('.type__img').setAttribute('data-bind', `attr: {src:'#'}`)
     document.querySelector('.input__img_card').setAttribute('data-bind', `attr: {src:'${images_src?.no_name_card}'}`)
     document.querySelector('.identity__logo').setAttribute('data-bind', `attr: {src:'${images_src?.id_logo}'}`)
     document.querySelector('.loader__element_image').setAttribute('data-bind', `attr: {src:'${images_src?.loading_spinner}'}`)
@@ -108,6 +107,11 @@ const identity_validator = id => {
 
 const luhn_algorithm_check = input => {
     let cri = input.split('').map(Number)
+
+    if (/^0+$/.test(input)) {
+        return false // Explicitly reject all-zero input
+    }
+
     let total = 0
     for (let i = cri.length - 2; i >= 0; i = i - 2) {
         let tv = cri[i]
@@ -125,56 +129,60 @@ const luhn_algorithm_check = input => {
 
 const isracard_algorithm_check = input => {
     let cardNumber = input.padStart(9, '0')
+
+    if (/^(123456789|987654321)$/.test(cardNumber) || /^0+$/.test(cardNumber)) return false
+
     const digits = cardNumber.split('').map(Number)
-    const weights = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+    const weights = digits.length === 8 ? [8, 7, 6, 5, 4, 3, 2, 1] : [9, 8, 7, 6, 5, 4, 3, 2, 1]
     const weightedSums = digits.map((digit, index) => digit * weights[index])
     const totalSum = weightedSums.reduce((acc, val) => acc + val, 0)
     return totalSum % 11 === 0
 }
 
 const isKnowCard = input => {
-    if (regexp.amex(input)) return { name: 'American Express', counts: 15 }
-    if (regexp.visa(input)) return { name: 'Visa', counts: 16 }
-    if (regexp.mastercard(input)) return { name: 'MasterCard', counts: 16 }
-    if (regexp.discover(input)) return { name: 'Discover', counts: 16 }
-    if (regexp.diners(input)) return { name: 'Diners Club', counts: 14 }
-    if (regexp.jcb(input)) return { name: 'JCB', counts: 16 }
-    if (regexp.unionpay(input)) return { name: 'UnionPay', counts: 16 }
-    if (regexp.maestro(input)) return { name: 'Maestro', counts: 16 } // Maestro can vary; update if needed
-    if (regexp.uatp(input)) return { name: 'UATP', counts: 15 }
-    if (regexp.isracart(input)) return { name: 'Isracard', counts: 8 } // check~~~~~~~~~~~~~~~~~~~
+    if (regexp.amex(input)) return { name: 'American Express', counts: [15] }
+    if (regexp.visa(input)) return { name: 'Visa', counts: [16] }
+    if (regexp.mastercard(input)) return { name: 'MasterCard', counts: [16] }
+    if (regexp.discover(input)) return { name: 'Discover', counts: [16] }
+    if (regexp.diners(input)) return { name: 'Diners Club', counts: [14] }
+    if (regexp.jcb(input)) return { name: 'JCB', counts: [16] }
+    if (regexp.unionpay(input)) return { name: 'UnionPay', counts: [16] }
+    if (regexp.maestro(input)) return { name: 'Maestro', counts: [16] } // Maestro can vary; update if needed
+    if (regexp.uatp(input)) return { name: 'UATP', counts: [15] }
+    if (regexp.isracart(input)) return { name: 'Isracard', counts: [8, 9] } // check~~~~~~~~~~~~~~~~~~~
     return null
 }
 
-////// this function is for using in cardcom constructor only
+const dispatchEventErrors = element => {
+    element.focus()
+    element.value = ''
+    element.dispatchEvent(new Event('change'))
+}
 
-const lockThis = async (submit, error) => {
+////// this function is for using in cardcom constructor only, need paste this manually in cardcom
+
+const lockThis = async (submit, { hasMessages, messages }) => {
     const possible_errors = {
         card_number_error: { value: 'מספר כרטיס שגוי', element: document.querySelector('.number__err') },
         need_card_num: { value: 'מספר כרטיס אשראי שדה חובה', element: document.querySelector('.number__err') },
         need_cvv: { value: 'מספר CVV חובה', element: document.querySelector('.cvv__err') },
-        need_name: { value: 'שם בעל הכרטיס חובה', element: document.querySelector('.number__err') },
         need_ide: { value: 'ת.ז. שדה חובה', element: document.querySelector('.identity__err') },
-        need_terms: { value: 'יש לסמן קריאה והסכמה לתקנון', element: 'element' }
+        need_name: { value: 'שם בעל הכרטיס חובה', element: 'unknown' },
+        need_terms: { value: 'יש לסמן קריאה והסכמה לתקנון', element: 'unknown' }
     }
-
     await submit()
 
-    if (error.hasMessages()) {
-        error.messages().map(({ message }) => {
-            console.log(message)
+    if (!hasMessages()) return console.log('Error not found')
 
-            const errorKey = Object.keys(possible_errors).find(key => possible_errors[key].value === message)
+    messages().map(({ message }) => {
+        console.log('error message: ', message)
+        const errorKey = Object.keys(possible_errors).find(key => possible_errors[key].value === message)
 
-            if (errorKey) {
-                console.log(`Error key found: ${possible_errors[errorKey].element}`)
-                possible_errors[errorKey].element.style.visibility = 'visible'
-            } else {
-                console.log('Error key not found.')
-            }
-            // cvv__err_.style.visibility = 'visible'
-        })
-    }
+        if (!errorKey) return console.log('Error key not found')
+        if (typeof possible_errors[errorKey].element == 'string') return console.log('element not in use')
+
+        possible_errors[errorKey].element.style.visibility = 'visible'
+    })
 }
 
-export { images_src, titles, regexp, isIframe, dev_titles_loader, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard }
+export { images_src, titles, regexp, isIframe, dev_titles_loader, dispatchEventErrors, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard }
