@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const submit__button_real = document.querySelector('.submit__button_real')
     const loader__element = document.querySelector('.loader__element')
     const terms_checkbox = document.querySelector('.checkbox__input')
-
     const card_num_input = document.getElementById('txtCardNumber')
     const card_exp_input = document.getElementById('exp-date')
     const card_cvv_input = document.getElementById('txtCvv')

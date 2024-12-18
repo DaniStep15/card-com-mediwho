@@ -460,7 +460,7 @@ html {
             //
             .content__data {
                 flex-direction: column;
-                margin: 20px 0 10px 0;
+                margin: 5px 0 5px 0;
                 gap: 20px 0;
                 .content__robot_img {
                     display: none;
@@ -470,7 +470,7 @@ html {
                 }
                 .content__data_left {
                     height: 160px;
-                    width: 234px;
+                    width: 250px;
                     &.show_back {
                         .card__inner {
                             transform: rotateY(-180deg);
@@ -534,7 +534,7 @@ html {
                     }
                 }
                 .content__data_right {
-                    width: 75%;
+                    width: 250px;
                     height: 235px;
                     .form-group {
                         label {
