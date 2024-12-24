@@ -161,6 +161,7 @@ const dispatchEventErrors = element => {
 
 ////// this function is for using in cardcom constructor only, need paste this manually in cardcom
 
+// <script type="text/javascript" defer>
 const lockThis = async (submit, { hasMessages, messages }) => {
     const possible_errors = {
         card_number_error: { value: 'מספר כרטיס שגוי', element: document.querySelector('.number__err') },
@@ -170,6 +171,9 @@ const lockThis = async (submit, { hasMessages, messages }) => {
         need_name: { value: 'שם בעל הכרטיס חובה', element: 'unknown' },
         need_terms: { value: 'יש לסמן קריאה והסכמה לתקנון', element: 'unknown' }
     }
+
+    document.getElementById('PopUpRTL').style.display = 'none'
+
     await submit()
 
     if (!hasMessages()) return console.log('Error not found')
@@ -184,5 +188,6 @@ const lockThis = async (submit, { hasMessages, messages }) => {
         possible_errors[errorKey].element.style.visibility = 'visible'
     })
 }
+// </script>
 
 export { images_src, titles, regexp, isIframe, dev_titles_loader, dispatchEventErrors, error_handler, identity_validator, setPageTitles, luhn_algorithm_check, isracard_algorithm_check, isKnowCard }
