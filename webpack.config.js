@@ -12,7 +12,7 @@ module.exports = env => {
             filename: '[name].js',
             assetModuleFilename: 'images/[hash][ext][query]',
             clean: true,
-            publicPath: '/' // resolve iframe err
+            publicPath: env.publicPath || '/' // resolve iframe err
         },
         plugins: [
             new HtmlWebpackPlugin({ template: path.resolve(__dirname, './src/index.html') }),

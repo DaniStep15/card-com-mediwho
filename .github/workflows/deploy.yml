@@ -18,11 +18,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci        # если нет package-lock.json, используйте npm install
-      - run: npm run build
+      - run: npm install
+      - run: npx webpack --env mode=production --env publicPath=/card-com-mediwho/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist     # папка, указанная в output.path в webpack.config.js
+          path: ./build
 
   deploy:
     needs: build
